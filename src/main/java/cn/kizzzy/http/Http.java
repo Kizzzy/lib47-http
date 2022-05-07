@@ -1,18 +1,23 @@
 package cn.kizzzy.http;
 
-import okhttp3.HttpUrl;
-
+import java.io.IOException;
 import java.util.Map;
 
 public interface Http {
     
-    HttpUrl doParse(String url, Map<String, String> query);
+    String USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36 Edg/87.0.664.57";
     
-    String doGet(String url, Map<String, String> query);
+    String doParse(String url, Map<String, String> query);
     
-    String doGet(String url, Map<String, String> query, Map<String, String> header);
+    default <T> T doGet(String url, HttpArgs<T> args) throws IOException {
+        args.method = HttpMethod.GET;
+        return doInterview(url, args);
+    }
     
-    String doPost(String url, Map<String, String> query, Map<String, String> form);
+    default <T> T doPost(String url, HttpArgs<T> args) throws IOException {
+        args.method = HttpMethod.POST;
+        return doInterview(url, args);
+    }
     
-    String doPost(String url, Map<String, String> query, Map<String, String> form, Map<String, String> header);
+    <T> T doInterview(String urlStr, HttpArgs<T> args) throws IOException;
 }
