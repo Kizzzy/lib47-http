@@ -32,7 +32,7 @@ public class JdkHttp extends HttpAdapter {
         args.headerKvs.forEach(conn::setRequestProperty);
         //args.formKvs.forEach(conn::setRequestProperty);
         if (conn.getResponseCode() == 200) {
-            return args.callback.doUrlExecute(conn.getInputStream());
+            return args.callback.doUrlExecute(new JdkHttpResponse(conn));
         }
         throw new IOException(String.format("%s interview error: %s", url, conn.getResponseCode()));
     }

@@ -64,7 +64,7 @@ public class OkHttp extends HttpAdapter {
         Response response = call.execute();
         ResponseBody responseBody = response.body();
         if (response.code() == 200 && responseBody != null) {
-            return args.callback.doUrlExecute(responseBody.byteStream());
+            return args.callback.doUrlExecute(new OkHttpResponse(response));
         }
         throw new IOException(String.format("%s interview error: %s", url, response.code()));
     }
