@@ -21,10 +21,20 @@ public class OkHttp extends HttpAdapter {
     private OkHttpClient httpClient;
     
     public OkHttp() {
-        this(null);
+        this(USER_AGENT, null);
     }
     
     public OkHttp(CookieJar cookieJar) {
+        this(USER_AGENT, cookieJar);
+    }
+    
+    public OkHttp(String userAgent) {
+        this(userAgent, null);
+    }
+    
+    public OkHttp(String userAgent, CookieJar cookieJar) {
+        super(userAgent);
+        
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
         if (cookieJar != null) {
             builder.cookieJar(cookieJar);
@@ -33,31 +43,37 @@ public class OkHttp extends HttpAdapter {
     }
     
     @Override
-    public String doParse(String url, Map<String, String> query) {
-        HttpUrl.Builder urlBuilder = HttpUrl.parse(url).newBuilder();
-        query.forEach(urlBuilder::addQueryParameter);
-        return urlBuilder.build().toString();
+    public String parse(String url, Map<String, String> query) {
+        if (query != null && query.size() > 0) {
+            HttpUrl.Builder urlBuilder = HttpUrl.parse(url).newBuilder();
+            query.forEach(urlBuilder::addQueryParameter);
+            return urlBuilder.build().toString();
+        }
+        return url;
     }
     
     @Override
-    protected <T> T doInterviewImpl(String url, HttpArgs<T> args) throws IOException {
-        FormBody.Builder formBuilder = new FormBody.Builder();
-        args.formKvs.forEach(formBuilder::add);
+    protected <T> T interviewImpl(HttpArgs<T> args) throws Exception {
+        String url = parse(args.url, args.queryKvs);
+        LogHelper.info("<===" + url);
         
-        url = doParse(url, args.queryKvs);
         Request.Builder requestBuilder = new Request.Builder().url(url);
         
         if (args.method == HttpMethod.GET) {
             requestBuilder.get();
         } else if (args.method == HttpMethod.POST) {
+            FormBody.Builder formBuilder = new FormBody.Builder();
+            if (args.formKvs != null) {
+                args.formKvs.forEach(formBuilder::add);
+            }
             requestBuilder.post(formBuilder.build());
         } else if (args.method == HttpMethod.HEAD) {
             requestBuilder.head();
         }
         
-        LogHelper.info("<===" + url);
-        
-        args.headerKvs.forEach(requestBuilder::header);
+        if (args.headerKvs != null) {
+            args.headerKvs.forEach(requestBuilder::header);
+        }
         
         Call call = httpClient.newCall(requestBuilder.build());
         

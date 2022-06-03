@@ -1,11 +1,34 @@
 package cn.kizzzy.http;
 
-import java.io.IOException;
+import cn.kizzzy.helper.StringHelper;
+
 import java.util.HashMap;
 
 public abstract class HttpAdapter implements Http {
     
-    private static <T> void initialArgs(HttpArgs<T> args) {
+    private final String userAgent;
+    
+    public HttpAdapter() {
+        this(USER_AGENT);
+    }
+    
+    public HttpAdapter(String userAgent) {
+        this.userAgent = userAgent;
+    }
+    
+    @Override
+    public <T> T interview(HttpArgs<T> args) throws Exception {
+        initialHttpArgs(args);
+        return interviewImpl(args);
+    }
+    
+    protected abstract <T> T interviewImpl(HttpArgs<T> args) throws Exception;
+    
+    private <T> void initialHttpArgs(HttpArgs<T> args) {
+        if (StringHelper.isNullOrEmpty(args.url)) {
+            throw new NullPointerException("url is null: " + args.url);
+        }
+        
         if (args.callback == null) {
             throw new NullPointerException("callback is null");
         }
@@ -14,24 +37,9 @@ public abstract class HttpAdapter implements Http {
             args.method = HttpMethod.GET;
         }
         
-        if (args.queryKvs == null) {
-            args.queryKvs = new HashMap<>();
-        }
-        
         if (args.headerKvs == null) {
             args.headerKvs = new HashMap<>();
         }
-        args.headerKvs.put("User-agent", USER_AGENT);
-        
-        if (args.formKvs == null) {
-            args.formKvs = new HashMap<>();
-        }
+        args.headerKvs.put("User-Agent", userAgent);
     }
-    
-    public <T> T doInterview(String url, HttpArgs<T> args) throws IOException {
-        initialArgs(args);
-        return doInterviewImpl(url, args);
-    }
-    
-    protected abstract <T> T doInterviewImpl(String url, HttpArgs<T> args) throws IOException;
 }

@@ -1,14 +1,14 @@
 package cn.kizzzy.http;
 
-public class HttpResult {
+public class HttpResult<T> {
     
     private final boolean ok;
     
     private final String msg;
     
-    private final Object data;
+    private final T data;
     
-    public HttpResult(boolean ok, String msg, Object data) {
+    public HttpResult(boolean ok, String msg, T data) {
         this.ok = ok;
         this.msg = msg;
         this.data = data;
@@ -22,7 +22,7 @@ public class HttpResult {
         return msg;
     }
     
-    public Object getData() {
+    public T getData() {
         return data;
     }
 }

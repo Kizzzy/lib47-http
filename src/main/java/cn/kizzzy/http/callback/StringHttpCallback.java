@@ -6,8 +6,20 @@ import cn.kizzzy.http.HttpResponse;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 public class StringHttpCallback implements HttpCallback<String> {
+    
+    private final Charset charset;
+    
+    public StringHttpCallback() {
+        this(StandardCharsets.UTF_8);
+    }
+    
+    public StringHttpCallback(Charset charset) {
+        this.charset = charset;
+    }
     
     @Override
     public String doUrlExecute(HttpResponse response) throws IOException {
@@ -18,7 +30,7 @@ public class StringHttpCallback implements HttpCallback<String> {
                 os.write(buf, 0, len);
                 total += len;
             }
-            return os.toString();
+            return new String(os.toByteArray(), charset);
         }
     }
 }

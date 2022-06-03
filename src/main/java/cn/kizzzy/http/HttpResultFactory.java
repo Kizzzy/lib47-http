@@ -1,18 +1,12 @@
 package cn.kizzzy.http;
 
-public interface HttpResultFactory<T> {
+public interface HttpResultFactory {
     
-    default HttpResult create(boolean isOk, String msg) {
-        return create(null, isOk, msg, null);
+    default <T> HttpResult<T> create(boolean isOk, String msg) {
+        return create(isOk, msg, null);
     }
     
-    default HttpResult create(boolean isOk, String msg, Object data) {
-        return create(null, isOk, msg, data);
+    default <T> HttpResult<T> create(boolean isOk, String msg, T data) {
+        return new HttpResult<>(isOk, msg, data);
     }
-    
-    default HttpResult create(T course, boolean isOk, String msg) {
-        return create(course, isOk, msg, null);
-    }
-    
-    HttpResult create(T course, boolean isOk, String msg, Object data);
 }
