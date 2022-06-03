@@ -4,7 +4,6 @@ import cn.kizzzy.http.HttpCallback;
 import cn.kizzzy.http.HttpResponse;
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -22,7 +21,7 @@ public class StringHttpCallback implements HttpCallback<String> {
     }
     
     @Override
-    public String doUrlExecute(HttpResponse response) throws IOException {
+    public String doUrlExecute(HttpResponse response) throws Exception {
         try (InputStream is = response.openInputStream();
              ByteArrayOutputStream os = new ByteArrayOutputStream()) {
             byte[] buf = new byte[1 << 20];

@@ -4,7 +4,6 @@ import cn.kizzzy.http.HttpCallback;
 import cn.kizzzy.http.HttpResponse;
 import com.alibaba.fastjson.JSON;
 
-import java.io.IOException;
 import java.io.InputStream;
 
 public class JsonCallback<T> implements HttpCallback<T> {
@@ -16,7 +15,7 @@ public class JsonCallback<T> implements HttpCallback<T> {
     }
     
     @Override
-    public T doUrlExecute(HttpResponse response) throws IOException {
+    public T doUrlExecute(HttpResponse response) throws Exception {
         try (InputStream is = response.openInputStream()) {
             return JSON.parseObject(is, clazz);
         }

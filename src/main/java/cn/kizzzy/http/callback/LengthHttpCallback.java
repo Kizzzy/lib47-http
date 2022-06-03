@@ -3,12 +3,10 @@ package cn.kizzzy.http.callback;
 import cn.kizzzy.http.HttpCallback;
 import cn.kizzzy.http.HttpResponse;
 
-import java.io.IOException;
-
 public class LengthHttpCallback implements HttpCallback<Long> {
     
     @Override
-    public Long doUrlExecute(HttpResponse response) throws IOException {
+    public Long doUrlExecute(HttpResponse response) throws Exception {
         return response.length();
     }
 }

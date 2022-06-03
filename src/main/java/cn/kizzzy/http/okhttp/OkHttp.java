@@ -13,7 +13,6 @@ import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 
-import java.io.IOException;
 import java.util.Map;
 
 public class OkHttp extends HttpAdapter {
@@ -82,6 +81,6 @@ public class OkHttp extends HttpAdapter {
         if (response.code() == 200 && responseBody != null) {
             return args.callback.doUrlExecute(new OkHttpResponse(response));
         }
-        throw new IOException(String.format("%s interview error: %s", url, response.code()));
+        throw new Exception(String.format("%s interview error: %s", url, response.code()));
     }
 }

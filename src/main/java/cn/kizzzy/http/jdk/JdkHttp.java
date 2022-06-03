@@ -5,20 +5,8 @@ import cn.kizzzy.http.HttpAdapter;
 import cn.kizzzy.http.HttpArgs;
 import cn.kizzzy.http.HttpMethod;
 
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSocketFactory;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
-import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
-import java.security.SecureRandom;
-import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
 import java.util.Map;
 
 public class JdkHttp extends HttpAdapter {
@@ -74,6 +62,6 @@ public class JdkHttp extends HttpAdapter {
         if (conn.getResponseCode() == 200) {
             return args.callback.doUrlExecute(new JdkHttpResponse(conn));
         }
-        throw new IOException(String.format("%s interview error: %s", args.url, conn.getResponseCode()));
+        throw new Exception(String.format("%s interview error: %s", args.url, conn.getResponseCode()));
     }
 }

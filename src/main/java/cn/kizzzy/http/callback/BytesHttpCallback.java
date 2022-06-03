@@ -4,13 +4,12 @@ import cn.kizzzy.http.HttpCallback;
 import cn.kizzzy.http.HttpResponse;
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 
 public class BytesHttpCallback implements HttpCallback<byte[]> {
     
     @Override
-    public byte[] doUrlExecute(HttpResponse response) throws IOException {
+    public byte[] doUrlExecute(HttpResponse response) throws Exception {
         try (InputStream is = response.openInputStream();
              ByteArrayOutputStream os = new ByteArrayOutputStream()) {
             byte[] buf = new byte[1 << 20];
