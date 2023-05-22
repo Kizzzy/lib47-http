@@ -6,13 +6,19 @@
 
     <groupId>cn.kizzzy</groupId>
     <artifactId>lib47-http</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>${lib47-version}</version>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
+
+        <lib47-version>1.0-SNAPSHOT</lib47-version>
+        <maven-compiler-plugin-version>3.5.1</maven-compiler-plugin-version>
+
+        <okhttp-version>4.10.0</okhttp-version>
+        <fastjson-version>2.0.25</fastjson-version>
     </properties>
 
     <dependencies>
@@ -20,32 +26,30 @@
         <dependency>
             <groupId>cn.kizzzy</groupId>
             <artifactId>lib47-helper</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.squareup.okhttp3</groupId>
-            <artifactId>okhttp</artifactId>
-            <version>4.10.0-RC1</version>
+            <version>${lib47-version}</version>
         </dependency>
 
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
-            <version>1.2.75</version>
+            <version>${fastjson-version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.squareup.okhttp3</groupId>
+            <artifactId>okhttp</artifactId>
+            <version>${okhttp-version}</version>
         </dependency>
 
     </dependencies>
 
     <build>
         <plugins>
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.5.1</version>
+                <version>${maven-compiler-plugin-version}</version>
             </plugin>
-
         </plugins>
     </build>
 
