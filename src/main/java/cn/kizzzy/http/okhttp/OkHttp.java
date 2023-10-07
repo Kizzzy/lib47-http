@@ -13,30 +13,52 @@ import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 
+import java.net.ProxySelector;
 import java.util.Map;
 
 public class OkHttp extends HttpAdapter {
     
     private OkHttpClient httpClient;
     
-    public OkHttp() {
-        this(USER_AGENT, null);
-    }
+    private ProxySelector selector;
     
-    public OkHttp(CookieJar cookieJar) {
-        this(USER_AGENT, cookieJar);
+    public OkHttp() {
+        this(null, null, null);
     }
     
     public OkHttp(String userAgent) {
-        this(userAgent, null);
+        this(userAgent, null, null);
+    }
+    
+    public OkHttp(CookieJar cookieJar) {
+        this(null, cookieJar, null);
+    }
+    
+    public OkHttp(ProxySelector selector) {
+        this(null, null, selector);
     }
     
     public OkHttp(String userAgent, CookieJar cookieJar) {
+        this(userAgent, cookieJar, null);
+    }
+    
+    public OkHttp(String userAgent, ProxySelector selector) {
+        this(userAgent, null, selector);
+    }
+    
+    public OkHttp(CookieJar cookieJar, ProxySelector selector) {
+        this(null, cookieJar, selector);
+    }
+    
+    public OkHttp(String userAgent, CookieJar cookieJar, ProxySelector selector) {
         super(userAgent);
         
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
         if (cookieJar != null) {
             builder.cookieJar(cookieJar);
+        }
+        if (selector != null) {
+            builder.proxySelector(selector);
         }
         httpClient = builder.build();
     }

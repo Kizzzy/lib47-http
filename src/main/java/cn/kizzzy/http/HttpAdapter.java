@@ -9,11 +9,11 @@ public abstract class HttpAdapter implements Http {
     private final String userAgent;
     
     public HttpAdapter() {
-        this(USER_AGENT);
+        this(null);
     }
     
     public HttpAdapter(String userAgent) {
-        this.userAgent = userAgent;
+        this.userAgent = userAgent == null ? USER_AGENT : userAgent;
     }
     
     @Override
