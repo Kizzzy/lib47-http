@@ -1,15 +1,15 @@
 package cn.kizzzy.http.callback;
 
-import cn.kizzzy.http.HttpCallback;
 import cn.kizzzy.http.HttpResponse;
+import cn.kizzzy.http.HttpResponseParser;
 
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 
-public class BytesHttpCallback implements HttpCallback<byte[]> {
+public class BytesHttpResponseParser implements HttpResponseParser<byte[]> {
     
     @Override
-    public byte[] doUrlExecute(HttpResponse response) throws Exception {
+    public byte[] parse(HttpResponse response) throws Exception {
         try (InputStream is = response.openInputStream();
              ByteArrayOutputStream os = new ByteArrayOutputStream()) {
             byte[] buf = new byte[1 << 20];

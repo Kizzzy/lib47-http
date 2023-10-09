@@ -1,10 +1,9 @@
-package cn.kizzzy.http.jdk;
+package java.net;
 
 import cn.kizzzy.http.HttpResponse;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.HttpURLConnection;
 
 public class JdkHttpResponse implements HttpResponse {
     

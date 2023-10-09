@@ -1,7 +1,6 @@
-package cn.kizzzy.http.okhttp;
+package okhttp3;
 
 import cn.kizzzy.http.HttpResponse;
-import okhttp3.Response;
 
 import java.io.IOException;
 import java.io.InputStream;

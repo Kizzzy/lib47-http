@@ -1,9 +1,6 @@
-package cn.kizzzy.http.okhttp;
+package okhttp3;
 
-import cn.kizzzy.helper.LogHelper;
-import okhttp3.Cookie;
-import okhttp3.CookieJar;
-import okhttp3.HttpUrl;
+import cn.kizzzy.http.HttpCookieListener;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -17,6 +14,16 @@ public class OkHttpCookieJar implements CookieJar {
     private final Map<String, List<Cookie>> cookieStore =
         new ConcurrentHashMap<>();
     
+    private HttpCookieListener<Cookie> listener;
+    
+    public OkHttpCookieJar() {
+        this(null);
+    }
+    
+    public OkHttpCookieJar(HttpCookieListener<Cookie> listener) {
+        this.listener = listener;
+    }
+    
     @NotNull
     @Override
     public List<Cookie> loadForRequest(@NotNull HttpUrl url) {
@@ -27,13 +34,11 @@ public class OkHttpCookieJar implements CookieJar {
     @Override
     public void saveFromResponse(@NotNull HttpUrl url, @NotNull List<Cookie> cookies) {
         for (Cookie cookie : cookies) {
-            processCookie(cookie);
+            if (listener != null) {
+                listener.onCookie(cookie);
+            }
         }
         cookieStore.put(url.host(), cookies);
-    }
-    
-    protected void processCookie(Cookie cookie) {
-        LogHelper.info("===> key: " + cookie.name() + ", value: " + cookie.value());
     }
     
     public void load(String url, Map<String, String> kvs) {

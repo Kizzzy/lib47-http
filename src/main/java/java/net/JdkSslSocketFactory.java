@@ -1,4 +1,4 @@
-package cn.kizzzy.http.jdk;
+package java.net;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
