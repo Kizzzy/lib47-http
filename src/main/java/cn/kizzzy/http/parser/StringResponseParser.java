@@ -1,4 +1,4 @@
-package cn.kizzzy.http.callback;
+package cn.kizzzy.http.parser;
 
 import cn.kizzzy.http.HttpResponse;
 import cn.kizzzy.http.HttpResponseParser;
@@ -8,15 +8,15 @@ import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
-public class StringHttpResponseParser implements HttpResponseParser<String> {
+public class StringResponseParser implements HttpResponseParser<String> {
     
     private final Charset charset;
     
-    public StringHttpResponseParser() {
+    public StringResponseParser() {
         this(StandardCharsets.UTF_8);
     }
     
-    public StringHttpResponseParser(Charset charset) {
+    public StringResponseParser(Charset charset) {
         this.charset = charset;
     }
     

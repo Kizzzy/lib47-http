@@ -1,11 +1,11 @@
-package cn.kizzzy.http.callback;
+package cn.kizzzy.http.parser;
 
 import cn.kizzzy.http.HttpResponse;
 import cn.kizzzy.http.HttpResponseParser;
 
 import java.io.InputStream;
 
-public class LengthHttpResponseParser implements HttpResponseParser<Long> {
+public class LengthResponseParser implements HttpResponseParser<Long> {
     
     @Override
     public Long parse(HttpResponse response) throws Exception {

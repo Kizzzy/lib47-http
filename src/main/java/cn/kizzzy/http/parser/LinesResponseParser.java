@@ -1,4 +1,4 @@
-package cn.kizzzy.http.callback;
+package cn.kizzzy.http.parser;
 
 import cn.kizzzy.http.HttpResponse;
 import cn.kizzzy.http.HttpResponseParser;
@@ -9,7 +9,7 @@ import java.io.InputStreamReader;
 import java.util.LinkedList;
 import java.util.List;
 
-public class LinesHttpResponseParser implements HttpResponseParser<List<String>> {
+public class LinesResponseParser implements HttpResponseParser<List<String>> {
     
     @Override
     public List<String> parse(HttpResponse response) throws Exception {
