@@ -1,13 +1,16 @@
 package okhttp3;
 
-import cn.kizzzy.helper.LogHelper;
 import cn.kizzzy.http.HttpAdapter;
 import cn.kizzzy.http.HttpMethod;
 import cn.kizzzy.http.HttpResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 
 public class OkHttp extends HttpAdapter<Cookie> {
+    
+    protected static final Logger logger = LoggerFactory.getLogger(OkHttp.class);
     
     private final OkHttpClient httpClient;
     
@@ -38,7 +41,7 @@ public class OkHttp extends HttpAdapter<Cookie> {
     @Override
     protected <T> HttpResponse requestImpl(RequestArgs<T> args) throws Exception {
         String url = parse(args.url, args.queryKvs);
-        LogHelper.info("<===" + url);
+        logger.info("<===" + url);
         
         Request.Builder requestBuilder = new Request.Builder().url(url);
         

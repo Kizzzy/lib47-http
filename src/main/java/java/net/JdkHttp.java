@@ -1,14 +1,17 @@
 package java.net;
 
-import cn.kizzzy.helper.LogHelper;
 import cn.kizzzy.http.HttpAdapter;
 import cn.kizzzy.http.HttpMethod;
 import cn.kizzzy.http.HttpResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.OutputStream;
 import java.util.Map;
 
 public class JdkHttp extends HttpAdapter<HttpCookie> {
+    
+    protected static final Logger logger = LoggerFactory.getLogger(JdkHttp.class);
     
     private JdkHttp(Args<HttpCookie> _args) {
         super(_args);
@@ -35,7 +38,7 @@ public class JdkHttp extends HttpAdapter<HttpCookie> {
     @Override
     protected <T> HttpResponse requestImpl(RequestArgs<T> args) throws Exception {
         String url = parse(args.url, args.queryKvs);
-        LogHelper.info("<===" + url);
+        logger.info("<===" + url);
         
         URL _url = new URL(url);
         HttpURLConnection conn = (HttpURLConnection) _url.openConnection(_args.proxy);
