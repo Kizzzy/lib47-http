@@ -29,32 +29,39 @@ public abstract class HttpAdapter<Cookie> implements Http {
     
     @Override
     public <T> HttpResult<T> request(RequestArgs<T> args) throws Exception {
-        if (StringHelper.isNullOrEmpty(args.url)) {
-            throw new NullPointerException("url is null: " + args.url);
-        }
-        
-        if (args.parser == null) {
-            throw new NullPointerException("parser is null");
-        }
-        
-        if (args.method == null) {
-            args.method = HttpMethod.GET;
-        }
-        
-        if (args.headerKvs == null) {
-            args.headerKvs = new HashMap<>();
-        }
-        
-        args.headerKvs.put("User-Agent", this._args.userAgent);
-        
-        try (HttpResponse response = requestImpl(args)) {
-            T result = args.parser.parse(response);
-            if (args.callback != null) {
-                args.callback.accept(result);
+        try {
+            if (StringHelper.isNullOrEmpty(args.url)) {
+                throw new IllegalArgumentException("url is null");
             }
-            return new HttpResult<>(response.code(), args.info, "请求成功", result);
+            
+            if (args.parser == null) {
+                throw new IllegalArgumentException("parser is null");
+            }
+            
+            if (args.method == null) {
+                args.method = HttpMethod.GET;
+            }
+            
+            if (args.headerKvs == null) {
+                args.headerKvs = new HashMap<>();
+            }
+            
+            args.headerKvs.put("User-Agent", this._args.userAgent);
+            
+            try (HttpResponse response = requestImpl(args)) {
+                T result = args.parser.parse(response);
+                if (args.callback != null) {
+                    args.callback.accept(result);
+                }
+                return new HttpResult<>(response.code(), args.info, "请求成功", result);
+            } catch (Exception e) {
+                throw new HttpParseException(args.info, e);
+            }
         } catch (Exception e) {
-            throw new RuntimeException(String.format("%s 解析错误", args.info), e);
+            if (e instanceof HttpParseException) {
+                throw e;
+            }
+            throw new HttpErrorException(args.info, e);
         }
     }
     
