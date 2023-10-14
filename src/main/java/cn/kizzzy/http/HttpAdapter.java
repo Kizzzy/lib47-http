@@ -18,8 +18,6 @@ public abstract class HttpAdapter<Cookie> implements Http {
         public ProxySelector proxySelector;
         
         public HttpCookieListener<Cookie> cookieListener;
-        
-        public HttpResultFactory resultFactory = DEFAULT_RESULT_FACTORY;
     }
     
     protected final Args<Cookie> _args;
@@ -30,39 +28,33 @@ public abstract class HttpAdapter<Cookie> implements Http {
     }
     
     @Override
-    public <T> HttpResult<T> request(RequestArgs<T> args) {
-        try {
-            if (StringHelper.isNullOrEmpty(args.url)) {
-                throw new NullPointerException("url is null: " + args.url);
+    public <T> HttpResult<T> request(RequestArgs<T> args) throws Exception {
+        if (StringHelper.isNullOrEmpty(args.url)) {
+            throw new NullPointerException("url is null: " + args.url);
+        }
+        
+        if (args.parser == null) {
+            throw new NullPointerException("parser is null");
+        }
+        
+        if (args.method == null) {
+            args.method = HttpMethod.GET;
+        }
+        
+        if (args.headerKvs == null) {
+            args.headerKvs = new HashMap<>();
+        }
+        
+        args.headerKvs.put("User-Agent", this._args.userAgent);
+        
+        try (HttpResponse response = requestImpl(args)) {
+            T result = args.parser.parse(response);
+            if (args.callback != null) {
+                args.callback.accept(result);
             }
-            
-            if (args.parser == null) {
-                throw new NullPointerException("callback is null");
-            }
-            
-            if (args.method == null) {
-                args.method = HttpMethod.GET;
-            }
-            
-            if (args.headerKvs == null) {
-                args.headerKvs = new HashMap<>();
-            }
-            
-            args.headerKvs.put("User-Agent", this._args.userAgent);
-            
-            HttpResponse response = requestImpl(args);
-            
-            try {
-                T result = args.parser.parse(response);
-                if (args.callback != null) {
-                    args.callback.accept(result);
-                }
-                return _args.resultFactory.create(response.code(), args.info, "请求成功", result, null);
-            } catch (Exception e) {
-                return _args.resultFactory.create(response.code(), args.info, "解析错误", null, e);
-            }
+            return new HttpResult<>(response.code(), args.info, "请求成功", result);
         } catch (Exception e) {
-            return _args.resultFactory.create(-1, args.info, "请求错误", null, e);
+            throw new RuntimeException(String.format("%s 解析错误", args.info), e);
         }
     }
     
@@ -113,15 +105,6 @@ public abstract class HttpAdapter<Cookie> implements Http {
         public BuilderAdapter<Cookie, T> setCookieListener(HttpCookieListener<Cookie> cookieListener) {
             getArgs().cookieListener = cookieListener;
             return this;
-        }
-        
-        public BuilderAdapter<Cookie, T> setResultFactory(HttpResultFactory resultFactory) {
-            getArgs().resultFactory = resultFactory;
-            return this;
-        }
-        
-        public HttpResultFactory getResultFactory() {
-            return getArgs().resultFactory;
         }
         
         public abstract T build();

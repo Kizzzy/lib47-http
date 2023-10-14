@@ -27,4 +27,9 @@ public class OkHttpResponse implements HttpResponse {
     public InputStream openInputStream() throws IOException {
         return response.body().byteStream();
     }
+    
+    @Override
+    public void close() throws Exception {
+        response.close();
+    }
 }

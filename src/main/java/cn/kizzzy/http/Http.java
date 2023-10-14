@@ -29,11 +29,9 @@ public interface Http {
     
     String USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36 Edg/87.0.664.57";
     
-    HttpResultFactory DEFAULT_RESULT_FACTORY = new HttpResultFactory();
-    
     String parse(String url, Map<String, String> query);
     
-    <T> HttpResult<T> request(RequestArgs<T> args);
+    <T> HttpResult<T> request(RequestArgs<T> args) throws Exception;
     
     class RequestBuilder<T> {
         
@@ -95,6 +93,13 @@ public interface Http {
             return this;
         }
         
+        public RequestBuilder<T> addQueryIf(String key, Object value, boolean b) {
+            if (b) {
+                getQueryKvs().put(key, String.valueOf(value));
+            }
+            return this;
+        }
+        
         public RequestBuilder<T> setFormKvs(Map<String, String> formKvs) {
             getArgs().formKvs = formKvs;
             return this;
@@ -105,6 +110,13 @@ public interface Http {
             return this;
         }
         
+        public RequestBuilder<T> addFormIf(String key, Object value, boolean b) {
+            if (b) {
+                getFormKvs().put(key, String.valueOf(value));
+            }
+            return this;
+        }
+        
         public RequestBuilder<T> setHeaderKvs(Map<String, String> headerKvs) {
             getArgs().headerKvs = headerKvs;
             return this;
@@ -112,6 +124,13 @@ public interface Http {
         
         public RequestBuilder<T> addHeader(String key, Object value) {
             getHeaderKvs().put(key, String.valueOf(value));
+            return this;
+        }
+        
+        public RequestBuilder<T> addHeaderIf(String key, Object value, boolean b) {
+            if (b) {
+                getHeaderKvs().put(key, String.valueOf(value));
+            }
             return this;
         }
         
@@ -130,27 +149,27 @@ public interface Http {
             return this;
         }
         
-        public HttpResult<T> delete(Http http) {
+        public HttpResult<T> delete(Http http) throws Exception {
             getArgs().method = HttpMethod.DELETE;
             return request(http);
         }
         
-        public HttpResult<T> get(Http http) {
+        public HttpResult<T> get(Http http) throws Exception {
             getArgs().method = HttpMethod.GET;
             return request(http);
         }
         
-        public HttpResult<T> head(Http http) {
+        public HttpResult<T> head(Http http) throws Exception {
             getArgs().method = HttpMethod.HEAD;
             return request(http);
         }
         
-        public HttpResult<T> post(Http http) {
+        public HttpResult<T> post(Http http) throws Exception {
             getArgs().method = HttpMethod.POST;
             return request(http);
         }
         
-        public HttpResult<T> request(Http http) {
+        public HttpResult<T> request(Http http) throws Exception {
             return http.request(getArgs());
         }
     }

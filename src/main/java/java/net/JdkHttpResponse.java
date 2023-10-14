@@ -27,4 +27,9 @@ public class JdkHttpResponse implements HttpResponse {
     public InputStream openInputStream() throws IOException {
         return conn.getInputStream();
     }
+    
+    @Override
+    public void close() throws Exception {
+        conn.disconnect();
+    }
 }
