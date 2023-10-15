@@ -1,7 +1,5 @@
 package cn.kizzzy.http;
 
-import cn.kizzzy.helper.StringHelper;
-
 import java.net.Proxy;
 import java.net.ProxySelector;
 import java.util.HashMap;
@@ -29,14 +27,10 @@ public abstract class HttpAdapter<Cookie> implements Http {
     
     @Override
     public <T> HttpResult<T> request(RequestArgs<T> args) throws Exception {
+        HttpResponse response;
         try {
-            if (StringHelper.isNullOrEmpty(args.url)) {
-                throw new IllegalArgumentException("url is null");
-            }
-            
-            if (args.parser == null) {
-                throw new IllegalArgumentException("parser is null");
-            }
+            Objects.requireNonNull(args.url, "url can not be null");
+            Objects.requireNonNull(args.parser, "parser can not be null");
             
             if (args.method == null) {
                 args.method = HttpMethod.GET;
@@ -47,21 +41,21 @@ public abstract class HttpAdapter<Cookie> implements Http {
             }
             
             args.headerKvs.put("User-Agent", this._args.userAgent);
-            
-            try (HttpResponse response = requestImpl(args)) {
-                T result = args.parser.parse(response);
-                if (args.callback != null) {
-                    args.callback.accept(result);
-                }
-                return new HttpResult<>(response.code(), args.info, "请求成功", result);
-            } catch (Exception e) {
-                throw new HttpParseException(args.info, e);
-            }
+            response = requestImpl(args);
         } catch (Exception e) {
-            if (e instanceof HttpParseException) {
-                throw e;
-            }
             throw new HttpErrorException(args.info, e);
+        }
+        
+        try {
+            T result = args.parser.parse(response);
+            if (args.callback != null) {
+                args.callback.accept(result);
+            }
+            return new HttpResult<>(response.code(), args.info, "请求成功", result);
+        } catch (Exception e) {
+            throw new HttpParseException(args.info, e);
+        } finally {
+            response.close();
         }
     }
     
