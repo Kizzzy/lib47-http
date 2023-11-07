@@ -25,6 +25,8 @@ public interface Http {
         public Consumer<T> callback;
         
         public HttpWriter writer;
+        
+        public Consumer<RequestBuilder<T>> handler;
     }
     
     String USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36 Edg/87.0.664.57";
@@ -149,6 +151,11 @@ public interface Http {
             return this;
         }
         
+        public RequestBuilder<T> setHandler(Consumer<RequestBuilder<T>> handler) {
+            getArgs().handler = handler;
+            return this;
+        }
+        
         public HttpResult<T> delete(Http http) throws Exception {
             getArgs().method = HttpMethod.DELETE;
             return request(http);
@@ -170,6 +177,9 @@ public interface Http {
         }
         
         public HttpResult<T> request(Http http) throws Exception {
+            if (getArgs().handler != null) {
+                getArgs().handler.accept(this);
+            }
             return http.request(getArgs());
         }
     }
