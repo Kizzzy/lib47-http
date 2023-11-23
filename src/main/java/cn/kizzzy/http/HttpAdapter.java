@@ -47,7 +47,7 @@ public abstract class HttpAdapter<Cookie> implements Http {
         }
         
         try {
-            T result = args.parser.parse(response);
+            T result = response.length() == 0 ? null : args.parser.parse(response);
             if (args.callback != null) {
                 args.callback.accept(result);
             }

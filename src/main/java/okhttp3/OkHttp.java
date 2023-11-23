@@ -41,7 +41,7 @@ public class OkHttp extends HttpAdapter<Cookie> {
     @Override
     protected <T> HttpResponse requestImpl(RequestArgs<T> args) throws Exception {
         String url = parse(args.url, args.queryKvs);
-        logger.info("<===" + url);
+        logger.debug("<===" + url);
         
         Request.Builder requestBuilder = new Request.Builder().url(url);
         

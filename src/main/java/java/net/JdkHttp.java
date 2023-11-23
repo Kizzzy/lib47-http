@@ -38,7 +38,7 @@ public class JdkHttp extends HttpAdapter<HttpCookie> {
     @Override
     protected <T> HttpResponse requestImpl(RequestArgs<T> args) throws Exception {
         String url = parse(args.url, args.queryKvs);
-        logger.info("<===" + url);
+        logger.debug("<===" + url);
         
         URL _url = new URL(url);
         HttpURLConnection conn = (HttpURLConnection) _url.openConnection(_args.proxy);
