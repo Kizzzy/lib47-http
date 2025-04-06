@@ -3,6 +3,7 @@ package cn.kizzzy.http;
 import java.net.Proxy;
 import java.net.ProxySelector;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 public abstract class HttpAdapter<Cookie> implements Http {
@@ -40,7 +41,17 @@ public abstract class HttpAdapter<Cookie> implements Http {
                 args.headerKvs = new HashMap<>();
             }
             
-            args.headerKvs.put("User-Agent", this._args.userAgent);
+            boolean found = false;
+            for (Map.Entry<String, String> kv : args.headerKvs.entrySet()) {
+                if ("USER-AGENT".equalsIgnoreCase(kv.getKey())) {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                args.headerKvs.put("User-Agent", this._args.userAgent);
+            }
+            
             response = requestImpl(args);
         } catch (Exception e) {
             throw new HttpErrorException(args.info, e);

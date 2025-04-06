@@ -66,7 +66,7 @@ public class HttpServerBuilder {
     }
     
     public HttpServer build() throws IOException {
-        HttpServer httpServer = HttpServer.create(new InetSocketAddress(port), 100);
+        HttpServer httpServer = HttpServer.create(new InetSocketAddress("0.0.0.0", port), 100);
         
         if (context != null) {
             Method[] methods = context.getClass().getDeclaredMethods();
